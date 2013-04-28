@@ -1,0 +1,1 @@
+Try at http://tiller.fr/sandbox/minesweeper/
