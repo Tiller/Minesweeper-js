@@ -11,7 +11,7 @@
 	
 	<script src="Minesweeper.js"></script>
 	<script>
-	(function() {
+	//(function() {
 		var mine = new Minesweeper(30, 16, 99);
 		
 		document.body.appendChild(mine.dom);
@@ -21,7 +21,7 @@
 		setInterval(function() {
 			infos.innerHTML = Math.round(mine.getDuration() / 1000) + ' s - ' + (mine.getMineCount() - mine.getMarkedMineCount());
 		}, 250);
-	})();
+	//})();
 	</script>
 </body>
 </html>

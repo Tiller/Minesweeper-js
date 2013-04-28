@@ -58,10 +58,11 @@ var Minesweeper = (function() {
 	 * Generate the cells of the table
 	 */
 	Minesweeper.prototype.generateDom = function() {
-		var dom = document.createElement('table'),
-			tbody = document.createElement('tbody'),
-			tr, td, div,
+		var dom = document.createElement('div'),
+			tr, td,
 			x, y,
+			width = (100 / this.w).toFixed(2),
+			height = (100 / this.h).toFixed(2),
 			that = this,
 			generated = false,
 			eventApplier;
@@ -97,24 +98,23 @@ var Minesweeper = (function() {
 		};
 		
 		for (y = 0; y < this.h; y++) {
-			tr = document.createElement('tr');
+			tr = document.createElement('div');
+			tr.className = 'row';
+			tr.style.height = height + '%';
 			
 			for (x = 0, y; x < this.w; x++) {
-				td = document.createElement('td');
-				div = document.createElement('div');
+				td = document.createElement('div');
+				td.style.width = width + '%';
 				
 				eventApplier(td, x, y);
 				
 				this.cells[y * this.w + x] = td;
 				
-				td.appendChild(div);
 				tr.appendChild(td);
 			}
 			
-			tbody.appendChild(tr);
+			dom.appendChild(tr);
 		}
-		
-		dom.appendChild(tbody);
 		
 		return dom;
 	};
@@ -145,8 +145,20 @@ var Minesweeper = (function() {
 			this.mines[index] = true;
 		}
 		
-		this.dom.style.fontSize = (this.dom.offsetHeight / (1.5 * this.h)) + 'px';
+		this.resized();
 	};
+	
+	
+	/*
+	 * Set the font size depending on the table height
+	 */
+	Minesweeper.prototype.resized = function() {
+		this.dom.style.fontSize = '1px';
+		
+		this.dom.style.fontSize = (this.dom.offsetHeight / (1.5 * this.h)) + 'px';
+		this.dom.style.lineHeight = (this.dom.offsetHeight / this.h) + 'px';
+	};
+	
 	
 	/*
 	 * Return the 3-8 position around the (fx, fy) case
@@ -220,14 +232,15 @@ var Minesweeper = (function() {
 		this.state[pos] = 1;
 		
 		if (this.mines[pos]) {
-			this.cells[pos].firstChild.innerHTML = 'X';
+			this.cells[pos].innerHTML = 'X';
 			this.cells[pos].className = 'openCase caseX';
+			this.state[pos] = 2;
 			this.markedMine++;
 		}
 		else {
 			num = this.getNumber(pos);
 			
-			this.cells[pos].firstChild.innerHTML = num;
+			this.cells[pos].innerHTML = num;
 			this.cells[pos].className = 'openCase case' + num;
 			this.cells[pos].addEventListener('dblclick', function() {
 				var borders = that.getBorderCase(pos),
@@ -271,7 +284,7 @@ var Minesweeper = (function() {
 				
 			case 2:
 				this.state[pos] = 3;
-				this.cells[pos].firstChild.innerHTML = '?';
+				this.cells[pos].innerHTML = '?';
 				this.cells[pos].className = 'markAsk';
 				this.markedMine--;
 				
@@ -279,14 +292,14 @@ var Minesweeper = (function() {
 				
 			case 3:
 				delete this.state[pos];
-				this.cells[pos].firstChild.innerHTML = '';
+				this.cells[pos].innerHTML = '';
 				this.cells[pos].className = '';
 				
 				break;
 			
 			default:
 				this.state[pos] = 2;
-				this.cells[pos].firstChild.innerHTML = 'X';
+				this.cells[pos].innerHTML = 'X';
 				this.cells[pos].className = 'markMine';
 				this.markedMine++;
 				

@@ -1,72 +1,74 @@
-table.minesweeper {
-	border-collapse: collapse;
+div.minesweeper {
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	width: 900px;
+	height: 480px;
 }
 
-table.minesweeper td {
-	border: 1px solid black;
+div.minesweeper .row > div {
 	background-color: #4658c5;
-	box-shadow: inset 5px 5px 15px #5b7ee3;
-	cursor: pointer;
-	padding: 0;
-	color: white;
-}
-
-table.minesweeper td > div {
-	width: 50px;
-	height: 50px;
-	line-height: 50px;
-	overflow: hidden;
+	height: 100%;
+	float: left;
 	text-align: center;
+	color: white;
+	
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-shadow: inset 5px 5px 15px #5b7ee3;
+	
+	cursor: pointer;
+	overflow: hidden;
 }
 
-table.minesweeper td:not(.openCase):hover {
+div.minesweeper .row > div:not(.openCase):hover {
 	background-color: #68a6f4;
 }
 
-table.minesweeper .openCase {
-	font-weight: bold;
-	font-size: 1.1em;
-	background-color: #dbe9f4;
-	box-shadow: inset 1px 1px 1px #89898b;
-	cursor: default;
+div.minesweeper .openCase {
+	font-weight: bold !important;
+	background-color: #dbe9f4 !important;
+	box-shadow: inset 1px 1px 1px #89898b !important;
+	cursor: defaul !important;
 }
 
-table.minesweeper .case0 {
+div.minesweeper .case0 {
 	font-size: 0;
 }
 
-table.minesweeper .case1 {
-	color: #414fbc;
+div.minesweeper .case1 {
+	color: #414fbc !important;
 }
 
-table.minesweeper .case2 {
-	color: #1b6800;
+div.minesweeper .case2 {
+	color: #1b6800 !important;
 }
 
-table.minesweeper .case3 {
-	color: #aa0505;
+div.minesweeper .case3 {
+	color: #aa0505 !important;
 }
 
-table.minesweeper .case4 {
-	color: #050184;
+div.minesweeper .case4 {
+	color: #050184 !important;
 }
 
-table.minesweeper .case5 {
-	color: #7e0002;
+div.minesweeper .case5 {
+	color: #7e0002 !important;
 }
 
-table.minesweeper .case6 {
-	color: #097984;
+div.minesweeper .case6 {
+	color: #097984 !important;
 }
 
-table.minesweeper .case7 {
-	color: #9c0703;
+div.minesweeper .case7 {
+	color: #9c0703 !important;
 }
 
-table.minesweeper .case8 {
-	color: #ad0600;
+div.minesweeper .case8 {
+	color: #ad0600 !important;
 }
 
-table.minesweeper .caseX {
-	background-color: #9b3434;
+div.minesweeper .caseX {
+	background-color: #9b3434 !important;
 }
