@@ -1,0 +1,72 @@
+table.minesweeper {
+	border-collapse: collapse;
+}
+
+table.minesweeper td {
+	border: 1px solid black;
+	background-color: #4658c5;
+	box-shadow: inset 5px 5px 15px #5b7ee3;
+	cursor: pointer;
+	padding: 0;
+	color: white;
+}
+
+table.minesweeper td > div {
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	overflow: hidden;
+	text-align: center;
+}
+
+table.minesweeper td:not(.openCase):hover {
+	background-color: #68a6f4;
+}
+
+table.minesweeper .openCase {
+	font-weight: bold;
+	font-size: 1.1em;
+	background-color: #dbe9f4;
+	box-shadow: inset 1px 1px 1px #89898b;
+	cursor: default;
+}
+
+table.minesweeper .case0 {
+	font-size: 0;
+}
+
+table.minesweeper .case1 {
+	color: #414fbc;
+}
+
+table.minesweeper .case2 {
+	color: #1b6800;
+}
+
+table.minesweeper .case3 {
+	color: #aa0505;
+}
+
+table.minesweeper .case4 {
+	color: #050184;
+}
+
+table.minesweeper .case5 {
+	color: #7e0002;
+}
+
+table.minesweeper .case6 {
+	color: #097984;
+}
+
+table.minesweeper .case7 {
+	color: #9c0703;
+}
+
+table.minesweeper .case8 {
+	color: #ad0600;
+}
+
+table.minesweeper .caseX {
+	background-color: #9b3434;
+}
