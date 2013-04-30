@@ -43,7 +43,7 @@ var Minesweeper = (function() {
 		this.cells = [];
 		
 		/* Mines positions */
-		this.mines = [];
+		this.values = [];
 		
 		/* Cases's states, 1: opened, 2: mine marked, 3: '?' marked */
 		this.state = [];
@@ -105,6 +105,7 @@ var Minesweeper = (function() {
 			for (x = 0, y; x < this.w; x++) {
 				td = document.createElement('div');
 				td.style.width = width + '%';
+				td.title = y * this.w + x;
 				
 				eventApplier(td, x, y);
 				
@@ -128,7 +129,11 @@ var Minesweeper = (function() {
 			i, l, c, p,
 			forbidden = this.getBorderCase(fx, fy);
 		
+		console.log('Click on ', fx, fy, fy * this.w + fx);
+		
 		this.startTime = Date.now();
+		
+		// Generate an in-line grid
 		
 		forbidden.push(fy * this.w + fx);
 		
@@ -138,11 +143,21 @@ var Minesweeper = (function() {
 			}
 		}
 		
+		// Randomize
+		
 		for (c = this.c, l = pos.length; c > 0; c--) {
 			p = Math.floor(Math.random() * l--);
 			index = pos.splice(p, 1)[0];
 			
-			this.mines[index] = true;
+			this.values[index] = -1;
+		}
+		
+		// Set the values
+		
+		for (i = 0, l = this.w * this.h; i < l; i++) {
+			if (this.values[i] === undefined) {
+				this.values[i] = this.calcValue(i);
+			}
 		}
 		
 		this.resized();
@@ -204,21 +219,32 @@ var Minesweeper = (function() {
 	};
 	
 	/*
+	 * Return the previously calculated mine count around the (fx, fy) case
+	 */
+	Minesweeper.prototype.getValue = function(fx, fy) {
+		if (fy !== undefined) {
+			fx += fy * this.w;
+		}
+		
+		return this.values[fx];
+	};
+	
+	/*
 	 * Return the mine count around the (fx, fy) case
 	 */
-	Minesweeper.prototype.getNumber = function(fx, fy) {
+	Minesweeper.prototype.calcValue = function(fx, fy) {
 		var sum = 0,
 			i,
 			borders = this.getBorderCase(fx, fy);
 		
 		for (i = 0; i < borders.length; i++) {
-			if (this.mines[borders[i]]) {
+			if (this.values[borders[i]] < 0) {
 				sum++;
 			}
 		}
 		
 		return sum;
-	};
+	}
 	
 	/*
 	 * Open the given case (left click)
@@ -231,29 +257,20 @@ var Minesweeper = (function() {
 		}
 		this.state[pos] = 1;
 		
-		if (this.mines[pos]) {
+		if (this.values[pos] < 0) {
 			this.cells[pos].innerHTML = 'X';
 			this.cells[pos].className = 'openCase caseX';
 			this.state[pos] = 2;
 			this.markedMine++;
 		}
 		else {
-			num = this.getNumber(pos);
+			num = this.getValue(pos);
 			
 			this.cells[pos].innerHTML = num;
 			this.cells[pos].className = 'openCase case' + num;
 			this.cells[pos].addEventListener('dblclick', function() {
-				var borders = that.getBorderCase(pos),
-					i, mark = 0;
-				
-				for (i = 0; i < borders.length; i++) {
-					if (that.state[borders[i]] === 2) {
-						mark++;
-					}
-				}
-				
-				if (mark === num) {
-					borders.map(that.open, that);
+				if (that.getMarkedMineCount(pos) === num) {
+					that.getBorderCase(pos).map(that.open, that);
 				}
 			}, false);
 			
@@ -322,10 +339,24 @@ var Minesweeper = (function() {
 	};
 	
 	/*
-	 * Return the marked mine count
+	 * Return the marked mine count around the given pos, or in the whole grid
 	 */
-	Minesweeper.prototype.getMarkedMineCount = function() {
-		return this.markedMine;
+	Minesweeper.prototype.getMarkedMineCount = function(pos) {
+		var i, mark = 0, borders;
+		
+		if (pos === 'undefined') {
+			return this.markedMine;
+		}
+		
+		borders = this.getBorderCase(pos);
+		
+		for (i = 0; i < borders.length; i++) {
+			if (this.state[borders[i]] === 2) {
+				mark++;
+			}
+		}
+		
+		return mark;
 	};
 	
 	/*

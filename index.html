@@ -8,18 +8,64 @@
 
 <body>
 	<div id="infos"></div>
+	<button id="test">Analyse</button>
+	<button id="do">Do</button>
+	<button id="anado">Analyse & Do</button>
 	
+	<script src="seedrandom-min.js"></script>
 	<script src="Minesweeper.js"></script>
+	<script src="MinesweeperAnalyser.js"></script>
 	<script>
 	//(function() {
-		var mine = new Minesweeper(30, 16, 99);
+		Math.seedrandom("test");
 		
-		document.body.appendChild(mine.dom);
+		var minesweeper = new Minesweeper(30, 16, 99);
+		var analyzer = new MinesweeperAnalyzer(minesweeper);
+		
+		
+		document.body.appendChild(minesweeper.dom);
+		
+		
+		document.getElementById('do').addEventListener('click', function() {
+			for (var i = 0; i < analyzer.openPossibilities.length; i++) {
+				minesweeper.open(analyzer.openPossibilities[i]);
+			}
+		}, false);
+		
+		
+		document.getElementById('anado').addEventListener('click', function() {
+			anal();
+			
+			for (var i = 0; i < analyzer.openPossibilities.length; i++) {
+				minesweeper.open(analyzer.openPossibilities[i]);
+			}
+		}, false);
+		
+		
+		
+		var anal = function() {
+			analyzer.firstAnalysis();
+			analyzer.secondAnalysis();
+			
+			for ( i = 0; i < analyzer.minesPossibilities.length; i++) {
+				minesweeper.cells[analyzer.minesPossibilities[i]].innerHTML = '!';
+			}
+			
+			for ( i = 0; i < analyzer.openPossibilities.length; i++) {
+				minesweeper.cells[analyzer.openPossibilities[i]].innerHTML = 'o';
+			}
+		};
+		
+		
+		
+		document.getElementById('test').addEventListener('click', anal, false);
+		
+		
 		
 		var infos = document.getElementById('infos');
 		
 		setInterval(function() {
-			infos.innerHTML = Math.round(mine.getDuration() / 1000) + ' s - ' + (mine.getMineCount() - mine.getMarkedMineCount());
+			infos.innerHTML = Math.round(minesweeper.getDuration() / 1000) + ' s - ' + (minesweeper.getMineCount() - minesweeper.getMarkedMineCount());
 		}, 250);
 	//})();
 	</script>
