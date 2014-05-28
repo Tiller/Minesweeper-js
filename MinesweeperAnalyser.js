@@ -61,7 +61,7 @@ var MinesweeperAnalyzer = (function() {
 			else if (this.state[cell] === 1) {
 				value = this.minesweeper.getValue(cell);
 				markValue = this.getMarkValue(cell);
-				borders = this.minesweeper.getBorderCase(cell);
+				borders = this.getBorderCase(cell);
 				
 				// Search empty cells around
 				free = [];
@@ -137,7 +137,7 @@ var MinesweeperAnalyzer = (function() {
 					changed = true;
 				}
 				else if (this.plainCells[plainCell][0] === 0 && this.minesweeper.getValue(plainCell) === this.getMarkValue(plainCell)) {
-					var borders = this.minesweeper.getBorderCase(plainCell);
+					var borders = this.getBorderCase(plainCell);
 					
 					for (i = 0; i < borders.length; i++) {
 						
@@ -164,7 +164,7 @@ var MinesweeperAnalyzer = (function() {
 			return;
 		}
 		
-		borders = this.minesweeper.getBorderCase(mineCell);
+		borders = this.getBorderCase(mineCell);
 		
 		for (cell = 0; cell < borders.length; cell++) {
 			plainCell = borders[cell];
@@ -218,7 +218,7 @@ var MinesweeperAnalyzer = (function() {
 	/*
 	 TODO: Useless ?
 	MinesweeperAnalyzer.prototype.removeAllMinesAround = function(plainCell) {
-		var borders = this.minesweeper.getBorderCase(plainCell),
+		var borders = this.getBorderCase(plainCell),
 			i, j, cell;
 		
 		console.log('>>>', borders.length);
@@ -237,6 +237,32 @@ var MinesweeperAnalyzer = (function() {
 	};
 	*/
 	
+	
+	/*
+	 * Return the 3-8 position around the (fx, fy) case
+	 */
+	MinesweeperAnalyzer.prototype.getBorderCase = function(fx, fy) {
+		var i, j, x, y, cases = [];
+		
+		if (fy === undefined) {
+			fy = Math.floor(fx / this.minesweeper.w);
+			fx = fx % this.minesweeper.w;
+		}
+		
+		for (i = -1; i < 2; i++) {
+			for (j = -1; j < 2; j++) {
+				x = fx + i;
+				y = fy + j;
+				
+				if ((i !== 0 || j !== 0) && x >= 0 && x < this.minesweeper.w && y >= 0 && y < this.minesweeper.h) {
+					cases.push(y * this.minesweeper.w + x);
+				}
+			}
+		}
+		
+		return cases;
+	};
+	
 	MinesweeperAnalyzer.prototype.isMarked = function(pos) {
 		return this.state[pos] === 2 || this.state[pos] === 4;
 	};
@@ -252,7 +278,7 @@ var MinesweeperAnalyzer = (function() {
 	MinesweeperAnalyzer.prototype.getMarkValue = function(pos) {
 		var i, mark = 0, borders;
 		
-		borders = this.minesweeper.getBorderCase(pos);
+		borders = this.getBorderCase(pos);
 		
 		for (i = 0; i < borders.length; i++) {
 			if (this.isMarked(borders[i])) {

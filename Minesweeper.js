@@ -179,39 +179,21 @@ var Minesweeper = (function() {
 	 * Return the 3-8 position around the (fx, fy) case
 	 */
 	Minesweeper.prototype.getBorderCase = function(fx, fy) {
-		var cases = [];
+		var i, j, x, y, cases = [];
 		
 		if (fy === undefined) {
 			fy = Math.floor(fx / this.w);
 			fx = fx % this.w;
 		}
 		
-		if (fx !== 0) {
-			cases.push(fy * this.w + fx - 1);
-			
-			if (fy !== 0) {
-				cases.push((fy - 1) * this.w + fx - 1);
-			}
-			if (fy !== this.h - 1) {
-				cases.push((fy + 1) * this.w + fx - 1);
-			}
-		}
-		
-		if (fy !== 0) {
-			cases.push((fy - 1) * this.w + fx);
-		}
-		if (fy !== this.h - 1) {
-			cases.push((fy + 1) * this.w + fx);
-		}
-		
-		if (fx !== this.w - 1) {
-			cases.push(fy * this.w + fx + 1);
-			
-			if (fy !== 0) {
-				cases.push((fy - 1) * this.w + fx + 1);
-			}
-			if (fy !== this.h - 1) {
-				cases.push((fy + 1) * this.w + fx + 1);
+		for (i = -1; i < 2; i++) {
+			for (j = -1; j < 2; j++) {
+				x = fx + i;
+				y = fy + j;
+				
+				if ((i !== 0 || j !== 0) && x >= 0 && x < this.w && y >= 0 && y < this.h) {
+					cases.push(y * this.w + x);
+				}
 			}
 		}
 		
@@ -344,7 +326,7 @@ var Minesweeper = (function() {
 	Minesweeper.prototype.getMarkedMineCount = function(pos) {
 		var i, mark = 0, borders;
 		
-		if (pos === 'undefined') {
+		if (pos === undefined) {
 			return this.markedMine;
 		}
 		
